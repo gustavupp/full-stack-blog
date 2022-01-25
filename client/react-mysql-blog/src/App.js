@@ -1,12 +1,22 @@
 import { useState } from 'react'
+import Axios from 'axios'
 
 function App() {
-  const [post, setPost] = useState([])
+  //const [posts, setPosts] = useState({})
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    //setPosts({ title, content })
+    submitToServer()
+  }
+
+  const submitToServer = () => {
+    Axios.post('http://localhost:3001/post', {
+      title,
+      content,
+    }).then(() => console.log('success'))
   }
 
   return (
@@ -15,7 +25,7 @@ function App() {
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label for="title">Post Title</label>
+          <label htmlFor="title">Post Title</label>
           <input
             type="text"
             className="form-control"
@@ -26,10 +36,10 @@ function App() {
           />
         </div>
 
-        <div class="form-group">
-          <label for="textarea">Post Content</label>
+        <div className="form-group">
+          <label htmlFor="textarea">Post Content</label>
           <textarea
-            class="form-control"
+            className="form-control"
             id="textarea"
             rows="7"
             placeholder="Your blog post..."
