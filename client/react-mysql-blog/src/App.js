@@ -1,23 +1,47 @@
 import { useState } from 'react'
-import Axios from 'axios'
+//import Axios from 'axios'
 
 function App() {
-  //const [posts, setPosts] = useState({})
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    //setPosts({ title, content })
     submitToServer()
   }
 
   const submitToServer = () => {
+    const options = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      body: JSON.stringify({
+        title,
+        content,
+      }),
+    }
+
+    fetch('http://localhost:3001/post', options).then(() =>
+      console.log('success')
+    )
+  }
+
+  const getFromServer = async () => {
+    await fetch('http://localhost:3001/get')
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err))
+  }
+
+  //with Axios
+  /*const submitToServer = () => {
     Axios.post('http://localhost:3001/post', {
       title,
       content,
     }).then(() => console.log('success'))
-  }
+  }*/
 
   return (
     <main className="container">
@@ -46,10 +70,18 @@ function App() {
             onChange={(e) => setContent(e.target.value)}
           ></textarea>
         </div>
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn btn-primary mr-3">
           Submit
         </button>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={getFromServer}
+        >
+          Get
+        </button>
       </form>
+      <ul></ul>
     </main>
   )
 }

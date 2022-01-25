@@ -18,8 +18,9 @@ const db = mysql.createConnection({
 
 db.connect()
 
+//post request endpoint
 app.post('/post', (req, res) => {
-  console.log(req)
+  console.log(req.body)
   const title = req.body.title
   const content = req.body.content
 
@@ -33,6 +34,14 @@ app.post('/post', (req, res) => {
       }
     }
   )
+})
+
+//get request endpoint
+app.get('/get', (req, res) => {
+  db.query('SELECT * FROM blogposts;', (err, result) => {
+    if (err) console.log(err)
+    else res.send(result)
+  })
 })
 
 app.get('/', (req, res) => {
