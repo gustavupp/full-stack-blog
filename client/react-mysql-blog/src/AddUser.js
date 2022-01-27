@@ -88,6 +88,7 @@ export const AddUser = ({ edit, users, dispatch }) => {
 
   return (
     <main className="container">
+      {/* edit button */}
       <h2 className="my-4 text-center">Create a New Post</h2>
       <Link
         to="/"
@@ -97,6 +98,7 @@ export const AddUser = ({ edit, users, dispatch }) => {
         All Users
       </Link>
       <form onSubmit={edit ? updateUser : handleSubmit}>
+        {/* name */}
         <div className="form-group">
           <label htmlFor="title">Post Title</label>
           <input
@@ -110,6 +112,7 @@ export const AddUser = ({ edit, users, dispatch }) => {
           />
         </div>
 
+        {/* email */}
         <div className="form-group">
           <label htmlFor="email">Email</label>
           <input
@@ -121,6 +124,8 @@ export const AddUser = ({ edit, users, dispatch }) => {
             onChange={(e) => setEmail(e.target.value)}
           ></input>
         </div>
+
+        {/* gender */}
         <div className="radios d-flex ">
           <p className="mr-4">Gender: </p>
           <div className="pr-4 form-check">
@@ -132,9 +137,11 @@ export const AddUser = ({ edit, users, dispatch }) => {
               name="gender"
               id="male"
               value="male"
+              checked={gender === 'male' ? 'checked' : ''}
             ></input>
             <label htmlFor="male">Male</label>
           </div>
+
           <div className="form-check">
             <input
               className="form-check-input"
@@ -142,10 +149,14 @@ export const AddUser = ({ edit, users, dispatch }) => {
               name="gender"
               id="female"
               value="female"
+              onChange={(e) => setGender(e.target.value)}
+              checked={gender === 'female' ? 'checked' : ''}
             ></input>
             <label htmlFor="female">Female</label>
           </div>
         </div>
+
+        {/* status */}
         <div className="radios d-flex ">
           <p className="mr-4">Status: </p>
           <div className="pr-4 form-check">
@@ -157,6 +168,7 @@ export const AddUser = ({ edit, users, dispatch }) => {
               name="status"
               id="active"
               value="active"
+              checked={status === 'active' ? 'checked' : ''}
             ></input>
             <label htmlFor="active">Active</label>
           </div>
@@ -167,6 +179,8 @@ export const AddUser = ({ edit, users, dispatch }) => {
               name="status"
               id="inactive"
               value="inactive"
+              onChange={(e) => setStatus(e.target.value)}
+              checked={status === 'inactive' ? 'checked' : ''}
             ></input>
             <label htmlFor="inactive">Inactive</label>
           </div>
