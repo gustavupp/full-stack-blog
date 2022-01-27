@@ -21,12 +21,14 @@ db.connect()
 //post request endpoint
 app.post('/post', (req, res) => {
   console.log(req.body)
-  const title = req.body.title
-  const content = req.body.content
+  const name = req.body.name
+  const email = req.body.email
+  const gender = req.body.gender
+  const status = req.body.status
 
   db.query(
-    'INSERT INTO blogposts (title, content) VALUES (?, ?)',
-    [title, content],
+    'INSERT INTO users (userName, email, gender, userStatus) VALUES (?, ?,?,?)',
+    [name, email, gender, status],
     (err, result) => {
       if (err) console.log(err)
       else {
@@ -38,7 +40,7 @@ app.post('/post', (req, res) => {
 
 //get request endpoint
 app.get('/get', (req, res) => {
-  db.query('SELECT * FROM blogposts;', (err, result) => {
+  db.query('SELECT * FROM users;', (err, result) => {
     if (err) console.log(err)
     else res.send(result)
   })
@@ -47,10 +49,28 @@ app.get('/get', (req, res) => {
 //delete request endpoint
 app.delete('/delete/:id', (req, res) => {
   const id = req.params.id
-  db.query('DELETE FROM blogposts WHERE id = ?', id, (err, result) => {
+  db.query('DELETE FROM users WHERE id = ?', id, (err, result) => {
     if (err) console.log(err)
     else res.send(result)
   })
+})
+
+//update endpoint
+app.put('/user', (req, res) => {
+  const id = req.body.id
+  const name = req.body.name
+  const email = req.body.email
+  const gender = req.body.gender
+  const status = req.body.status
+
+  db.query(
+    'UPDATE users SET userName = ?, email = ?, gender = ?, userStatus = ? WHERE id = ?',
+    [name, email, gender, status, id],
+    (err, result) => {
+      if (err) console.log(err)
+      else res.send(result)
+    }
+  )
 })
 
 app.get('/', (req, res) => {

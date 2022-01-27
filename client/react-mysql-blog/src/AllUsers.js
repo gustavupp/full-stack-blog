@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 
-function AllUsers() {
-  const [posts, setPosts] = useState([])
+function AllUsers({ setEditing, getData, users }) {
+  //const [posts, setPosts] = useState([])
 
   useEffect(() => {
     getFromServer()
-  }, [posts])
+  }, [users])
 
+  //get all data from databse
   const getFromServer = async () => {
     try {
       const response = await fetch('http://localhost:3001/get')
       const data = await response.json()
-
-      setPosts(data)
+      getData(data)
     } catch (error) {
       throw error
     }
@@ -33,25 +34,36 @@ function AllUsers() {
         <thead className="thead-light">
           <tr>
             <th scope="col">Id</th>
-            <th scope="col">Title</th>
-            <th scope="col">Content</th>
-            <th scope="col">Date</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Gender</th>
+            <th scope="col">Status</th>
+            <th scope="col">Admission</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {posts &&
-            posts.map((item) => {
-              const { id, title, content, postDate } = item
+          {users &&
+            users.map((item) => {
+              const { id, userName, email, gender, userStatus, admission } =
+                item
               return (
                 <tr key={id}>
                   <th scope="row">{id}</th>
-                  <td>{title}</td>
-                  <td>{content}</td>
-                  <td>{postDate}</td>
+                  <td>{userName}</td>
+                  <td>{email}</td>
+                  <td>{gender}</td>
+                  <td>{userStatus}</td>
+                  <td>{admission}</td>
                   <td>
                     <div className="d-flex">
-                      <button className="btn btn-info mr-2">Edit</button>
+                      <Link
+                        to={`/user/:${id}`}
+                        className="btn btn-info mr-2"
+                        onClick={setEditing}
+                      >
+                        Edit
+                      </Link>
                       <button
                         className="btn btn-danger"
                         onClick={() => deleteUser(id)}
@@ -65,11 +77,23 @@ function AllUsers() {
             })}
         </tbody>
       </table>
-      <Link to="/add-user" className="btn btn-success">
+      <Link to="/user/new-user" className="btn btn-success">
         Add User
       </Link>
     </main>
   )
 }
 
-export default AllUsers
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setEditing: () => dispatch({ type: 'EDITING', payload: true }),
+    getData: (data) => dispatch({ type: 'GET_DATA', payload: data }),
+  }
+}
+
+const mapStateToProps = (state) => {
+  const { users } = state
+  return { users }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AllUsers)
