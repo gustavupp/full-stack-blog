@@ -87,9 +87,9 @@ export const AddUser = ({ edit, users, dispatch }) => {
   }
 
   return (
-    <main className="container">
+    <main className="container my-5">
       {/* edit button */}
-      <h2 className="my-4 text-center">Create a New Post</h2>
+
       <Link
         to="/"
         className="btn btn-success my-4"

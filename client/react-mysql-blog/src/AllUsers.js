@@ -28,8 +28,7 @@ function AllUsers({ setEditing, getData, users }) {
   }
 
   return (
-    <main className="container">
-      <h2 className="my-4 text-center my-5">All Posts</h2>
+    <main className="container overflow-auto my-5">
       <table className="table ">
         <thead className="thead-light">
           <tr>
