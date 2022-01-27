@@ -19,7 +19,7 @@ export const AddUser = ({ edit, users, dispatch }) => {
       setGender(editingUser.gender)
       setStatus(editingUser.userStatus)
     }
-  }, [])
+  }, [edit, id, users])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -130,13 +130,12 @@ export const AddUser = ({ edit, users, dispatch }) => {
           <p className="mr-4">Gender: </p>
           <div className="pr-4 form-check">
             <input
-              value={gender}
+              value="male"
               onChange={(e) => setGender(e.target.value)}
               className="form-check-input"
               type="radio"
               name="gender"
               id="male"
-              value="male"
               checked={gender === 'male' ? 'checked' : ''}
             ></input>
             <label htmlFor="male">Male</label>
@@ -148,9 +147,9 @@ export const AddUser = ({ edit, users, dispatch }) => {
               type="radio"
               name="gender"
               id="female"
-              value="female"
               onChange={(e) => setGender(e.target.value)}
               checked={gender === 'female' ? 'checked' : ''}
+              value="female"
             ></input>
             <label htmlFor="female">Female</label>
           </div>
@@ -161,13 +160,12 @@ export const AddUser = ({ edit, users, dispatch }) => {
           <p className="mr-4">Status: </p>
           <div className="pr-4 form-check">
             <input
-              value={status}
+              value="active"
               onChange={(e) => setStatus(e.target.value)}
               className="form-check-input"
               type="radio"
               name="status"
               id="active"
-              value="active"
               checked={status === 'active' ? 'checked' : ''}
             ></input>
             <label htmlFor="active">Active</label>

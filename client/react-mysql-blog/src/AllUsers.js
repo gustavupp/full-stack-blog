@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
@@ -6,19 +6,18 @@ function AllUsers({ setEditing, getData, users }) {
   //const [posts, setPosts] = useState([])
 
   useEffect(() => {
-    getFromServer()
-  }, [users])
-
-  //get all data from databse
-  const getFromServer = async () => {
-    try {
-      const response = await fetch('http://localhost:3001/get')
-      const data = await response.json()
-      getData(data)
-    } catch (error) {
-      throw error
+    //get all data from databse
+    const getFromServer = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/get')
+        const data = await response.json()
+        getData(data)
+      } catch (error) {
+        throw error
+      }
     }
-  }
+    getFromServer()
+  }, [users, getData])
 
   //delete request
   const deleteUser = async (id) => {
