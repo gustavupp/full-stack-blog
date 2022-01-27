@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 import { connect } from 'react-redux'
+import Alert from './Alert'
 //import Axios from 'axios'
 
-export const AddUser = ({ edit, users, dispatch }) => {
+export const AddUser = ({ edit, users, alert, dispatch }) => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [gender, setGender] = useState('')
@@ -22,12 +23,22 @@ export const AddUser = ({ edit, users, dispatch }) => {
   }, [edit, id, users])
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    postToDatabase({ name, email, gender, status })
-    setName('')
-    setEmail('')
-    setGender('')
-    setStatus('')
+    if (name && email && gender && status) {
+      e.preventDefault()
+      postToDatabase({ name, email, gender, status })
+      setName('')
+      setEmail('')
+      setGender('')
+      setStatus('')
+
+      dispatch({ type: 'SET_ALERT', payload: true })
+      setTimeout(() => {
+        dispatch({ type: 'SET_ALERT', payload: false })
+      }, 2000)
+    } else {
+      e.preventDefault()
+      window.alert('Please, fill all fields!')
+    }
   }
 
   //post request wit Axios
@@ -55,9 +66,10 @@ export const AddUser = ({ edit, users, dispatch }) => {
     }
 
     try {
-      await fetch('http://localhost:3001/post', options).then(() =>
-        console.log('User Added')
-      )
+      await fetch(
+        'https://crud-user-management-system.herokuapp.com/post',
+        options
+      ).then(() => console.log('User Added'))
     } catch (error) {
       throw error
     }
@@ -65,31 +77,44 @@ export const AddUser = ({ edit, users, dispatch }) => {
 
   //update request
   const updateUser = async (e) => {
-    e.preventDefault()
-    const options = {
-      method: 'PUT',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      body: JSON.stringify({
-        name,
-        email,
-        id,
-        gender,
-        status,
-      }),
-    }
+    if (name && email && gender && status) {
+      e.preventDefault()
+      const options = {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          id,
+          gender,
+          status,
+        }),
+      }
 
-    await fetch('http://localhost:3001/user', options)
-      .then(() => console.log('User updated'))
-      .catch((err) => console.log(err))
+      await fetch(
+        'https://crud-user-management-system.herokuapp.com/user',
+        options
+      )
+        .then(() => console.log('User updated'))
+        .catch((err) => console.log(err))
+
+      dispatch({ type: 'SET_ALERT', payload: true })
+      setTimeout(() => {
+        dispatch({ type: 'SET_ALERT', payload: false })
+      }, 2000)
+    } else {
+      e.preventDefault()
+      window.alert('Please, fill out all fields!')
+    }
   }
 
   return (
     <main className="container my-5">
+      {alert && <Alert message={edit ? 'User Updated!' : 'User Added!'} />}
       {/* edit button */}
-
       <Link
         to="/"
         className="btn btn-success my-4"
@@ -100,7 +125,7 @@ export const AddUser = ({ edit, users, dispatch }) => {
       <form onSubmit={edit ? updateUser : handleSubmit}>
         {/* name */}
         <div className="form-group">
-          <label htmlFor="title">Post Title</label>
+          <label htmlFor="title">Name</label>
           <input
             type="text"
             className="form-control"
@@ -192,9 +217,9 @@ export const AddUser = ({ edit, users, dispatch }) => {
 }
 
 const mapStateToProps = (state) => {
-  const { edit, users } = state
+  const { edit, users, alert } = state
 
-  return { edit, users }
+  return { edit, users, alert }
 }
 
 export default connect(mapStateToProps)(AddUser)

@@ -1,15 +1,16 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import Alert from './Alert'
 
-function AllUsers({ setEditing, getData, users }) {
-  //const [posts, setPosts] = useState([])
-
+function AllUsers({ setEditing, getData, users, alert, setAlert }) {
   useEffect(() => {
     //get all data from databse
     const getFromServer = async () => {
       try {
-        const response = await fetch('http://localhost:3001/get')
+        const response = await fetch(
+          'https://crud-user-management-system.herokuapp.com/get'
+        )
         const data = await response.json()
         getData(data)
       } catch (error) {
@@ -21,13 +22,17 @@ function AllUsers({ setEditing, getData, users }) {
 
   //delete request
   const deleteUser = async (id) => {
-    await fetch(`http://localhost:3001/delete/${id}`, {
-      method: 'DELETE',
-    }).then(() => console.log('user deleted'))
+    await fetch(
+      `https://crud-user-management-system.herokuapp.com/delete/${id}`,
+      {
+        method: 'DELETE',
+      }
+    ).then(() => console.log('user deleted'))
   }
 
   return (
     <main className="container overflow-auto my-5">
+      {alert && <Alert message="User Deleted!" />}
       <table className="table ">
         <thead className="thead-light">
           <tr>
@@ -64,7 +69,13 @@ function AllUsers({ setEditing, getData, users }) {
                       </Link>
                       <button
                         className="btn btn-danger"
-                        onClick={() => deleteUser(id)}
+                        onClick={() => {
+                          deleteUser(id)
+                          setAlert(true)
+                          setTimeout(() => {
+                            setAlert(false)
+                          }, 2000)
+                        }}
                       >
                         Del
                       </button>
@@ -86,12 +97,14 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setEditing: () => dispatch({ type: 'EDITING', payload: true }),
     getData: (data) => dispatch({ type: 'GET_DATA', payload: data }),
+    setAlert: (typeOfAlert) =>
+      dispatch({ type: 'SET_ALERT', payload: typeOfAlert }),
   }
 }
 
 const mapStateToProps = (state) => {
-  const { users } = state
-  return { users }
+  const { users, alert } = state
+  return { users, alert }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AllUsers)
