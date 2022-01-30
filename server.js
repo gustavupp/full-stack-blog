@@ -1,26 +1,24 @@
 //express
 const express = require('express')
 const app = express()
-const port = 3001
 const cors = require('cors')
 
 app.use(cors())
 app.use(express.json())
 
-//mysql connection
+/****************************mysql connection*********************************/
 const mysql = require('mysql')
 const db = mysql.createConnection({
-  user: 'root',
-  host: 'localhost',
-  password: 'password123*',
-  database: 'blogdb',
+  user: 'b3d2af5763bd4b',
+  host: 'us-cdbr-east-05.cleardb.net',
+  password: '1b7b746f',
+  database: 'heroku_74fdc48ba3d5fda',
 })
-
-db.connect()
+mysql: db.connect()
+/****************************mysql connection*********************************/
 
 //post request endpoint
 app.post('/post', (req, res) => {
-  console.log(req.body)
   const name = req.body.name
   const email = req.body.email
   const gender = req.body.gender
@@ -74,9 +72,11 @@ app.put('/user', (req, res) => {
 })
 
 app.get('/', (req, res) => {
-  res.send('helloooo')
+  res.send('server running')
 })
 
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`)
+//initiate server and start listening for requests on PORT
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`)
 })
